@@ -8,6 +8,16 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using HealthChecks.UI.Configuration;
+using HealthChecks.UI.Core;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Threading;
+using Microsoft.AspNetCore.Authorization;
+
+
 
 namespace Monitor
 {
@@ -55,7 +65,11 @@ namespace Monitor
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 
-                endpoints.MapHealthChecksUI();
+                endpoints.MapHealthChecksUI(setup =>
+                {
+                    setup.AddCustomStylesheet("dotnet.css");
+
+                });
             });
         }
     }
