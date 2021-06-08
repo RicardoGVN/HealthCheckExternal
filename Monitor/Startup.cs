@@ -16,8 +16,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Threading;
 using Microsoft.AspNetCore.Authorization;
-
-
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http.Abstractions;
 
 namespace Monitor
 {
@@ -38,7 +40,6 @@ namespace Monitor
             services.AddHealthChecksUI()
                 .AddInMemoryStorage();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -61,15 +62,12 @@ namespace Monitor
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                
                 endpoints.MapHealthChecksUI(setup =>
                 {
                     setup.AddCustomStylesheet("dotnet.css");
-
-                });
+                    setup.UIPath = "/";
+                    setup.ApiPath = "/health-ui-api";//to display all the information gathered by the UI 
+                }); 
             });
         }
     }
